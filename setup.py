@@ -9,11 +9,11 @@ except:
 setup(
     name='dap2rpm',
     version='0.0.1',
-    description='Short description',
+    description='Generate RPM specfile for DevAssistant DAP packages',
     long_description=''.join(open('README.rst').readlines()),
-    keywords='some, keywords',
-    author='yourname',
-    author_email='yourmail',
+    keywords='DevAssistant, DAP, RPM, specfile',
+    author='Bohuslav Kabrda',
+    author_email='bkabrda@redhat.com',
     license='GPLv2',
     packages=find_packages(),
     classifiers=[
