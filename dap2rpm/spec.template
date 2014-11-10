@@ -1,0 +1,37 @@
+%global assistant_path %{_datadir}/devassistant
+
+Name:           {{ name }}
+Version:        {{ version }}
+Release:        1%{?dist}
+Summary:        {{ summary }}
+
+License:        {{ license }}
+URL:            {{ url }}
+Source0:        {{ source_url }}
+
+Requires:       devassistant
+{% for r in requires  %}
+Requires:       {{ r }}
+{% endfor %}
+
+%description
+{{ description }}
+
+%prep
+%setup -q
+
+%install
+mkdir -p %{buildroot}%{assistant_path}/meta
+cp -ar {% assistant_dirs %} {{ docs }} %{buildroot}%{assistant_path}
+cp -a meta.yaml %{buildroot}%{assistant_path}/meta
+
+%files
+{% if docs %}
+%doc {{ docs }}
+{% endif %}
+{% for dir in assistant_dirs %}
+%{assistant_path}/{{ dir }}
+{% endif %}
+
+%changelog
+{{ changelog_entry }}
