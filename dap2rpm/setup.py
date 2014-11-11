@@ -1,25 +1,26 @@
 import subprocess
 
-def setup_rpmdevtree():
-    rst = subprocess.Popen(['rpmdev-setuptree'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    out = rst.communicate()
-    if rst.returncode != 0:
-        raise  # TODO: message
+from dap2rpm import exceptions
 
-def has_rpmdev_packager():
-    has_rpk = subprocess.Popen(['which', 'rpmdev-packager'], stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    out = has_rpk.communicate()
-    if has_rpk.returncode != 0:
-        raise  # TODO: message
+def _run_or_raise(what):
+    error = False
+
+    try:
+        proc = subprocess.Popen(what, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
+        out = proc.communicate()
+        if proc.returncode != 0:
+            error = out
+    except subprocess.CalledProcessError as e:
+        error = str(e)
+
+    if error != 0:
+        raise exceptions.DAPSetupError('Running rpmdev-setuptree failed (is it installed?): \n'
+            + error)
+
+    return out
+
 
 def setup():
-    try:
-        setup_rpmdevtree()
-    except Exception as e:
-        raise  # TODO
-
-    try:
-        has_rpmdev_packager()
-    except Exception as e:
-        raise  # TODO
+    _run_or_raise(['rpmdev-setuptree'])
+    _run_or_raise(['which', 'rpmdev-packager'])

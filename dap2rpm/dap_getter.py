@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from dap2rpm import exceptions
+
 class DAPGetter(object):
     def __init__(self, dapname, version=None, saveto='~/rpmbuild/SOURCES'):
         self.dapname = dapname
@@ -15,7 +17,7 @@ class DAPGetter(object):
             full path to saved DAP
 
         Raises:
-            TODO exception if DAP doesn't exist or the specified version doesn't exist
+            exceptions.DAPGetException if getting the DAP fails
         """
         if self.dapname.endswith('.dap'):
             return self.get_dap_local()
@@ -29,7 +31,7 @@ class DAPGetter(object):
             full path to saved DAP
 
         Raises:
-            TODO exception if DAP doesn't exist or the specified version doesn't exist
+            exceptions.DAPGetException if getting the DAP fails
         """
         pass
 
@@ -41,8 +43,11 @@ class DAPGetter(object):
             full path to saved DAP
 
         Raises:
-            TODO exception if DAP doesn't exist
+            exceptions.DAPGetException if getting the DAP fails
         """
         resname = os.path.join(self.saveto, os.path.basename(self.dapname))
-        shutil.copy2(self.dapname, resname)
+        try:
+            shutil.copy2(self.dapname, resname)
+        except IOError as e:
+            raise exceptions.DAPGetException('Can\'t get local DAP: {0}'.format(e))
         return resname
