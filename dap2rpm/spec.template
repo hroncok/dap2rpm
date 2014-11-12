@@ -1,4 +1,4 @@
-%global assistant_path %{_datadir}/devassistant
+# TODO: create devassistant-devel with %assistant_path and %install_assistant macros
 
 Name:           {{ name }}
 Version:        {{ version }}
@@ -9,6 +9,7 @@ License:        {{ license }}
 URL:            {{ url }}
 Source0:        {{ source_url }}
 
+BuildRequires:  devassistant-devel
 Requires:       devassistant
 {% for r in requires  %}
 Requires:       {{ r }}
@@ -21,17 +22,15 @@ Requires:       {{ r }}
 %setup -q
 
 %install
-mkdir -p %{buildroot}%{assistant_path}/meta
-cp -ar {% assistant_dirs %} {{ docs }} %{buildroot}%{assistant_path}
-cp -a meta.yaml %{buildroot}%{assistant_path}/meta
+%install_assistant
 
 %files
-{% if docs %}
-%doc {{ docs }}
+{% if doc %}
+%doc %{assistant_path}/{{ doc }}
 {% endif %}
 {% for dir in assistant_dirs %}
 %{assistant_path}/{{ dir }}
-{% endif %}
+{% endfor %}
 
 %changelog
 {{ changelog_entry }}

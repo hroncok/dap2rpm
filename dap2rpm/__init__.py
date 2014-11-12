@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from dap2rpm import dap
 from dap2rpm import dap_getter
 from dap2rpm import setup
 
@@ -20,4 +21,5 @@ def main():
         sys.exit(1)
 
     dap_path = dap_getter.DAPGetter(args['dap'], args['version']).get_dap()
-    print(dap_path)
+    d = dap.DAP(dap_path)
+    print(d.render())
