@@ -16,6 +16,7 @@ setup(
     author_email='bkabrda@redhat.com',
     license='GPLv2',
     install_requires=open('requirements.txt').read().splitlines(),
+    package_data={'dap2rpm': ['spec.template']},
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',
