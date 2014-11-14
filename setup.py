@@ -18,6 +18,7 @@ setup(
     install_requires=open('requirements.txt').read().splitlines(),
     package_data={'dap2rpm': ['spec.template']},
     packages=find_packages(),
+    entry_points={'console_scripts': ['dap2rpm=dap2rpm:main']},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
