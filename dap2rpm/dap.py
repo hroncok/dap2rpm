@@ -134,7 +134,7 @@ class DAP(object):
         info['summary'] = meta_parsed.get('summary', '')
         info['license'] = meta_parsed.get('license', '')
         info['url'] = meta_parsed.get('homepage', '')
-        info['source_url'] = self.url  #TODO
+        info['source_url'] = self._get_macroized_source_url()
         info['requires'] = []
         for r in meta_parsed.get('dependencies', []):
             if not r.startswith('dap-'):
@@ -143,6 +143,15 @@ class DAP(object):
         info['requires'] = list(sorted(info['requires']))
         info['description'] = meta_parsed.get('description', '')
         return info
+
+    def _get_macroized_source_url(self):
+        if self.url:  # DAP from DAPI
+            parts = self.url.split('/')
+            parts[-1] = parts[-1].replace(self.name, '%{name}').\
+                replace(self.version, '%{version}')
+            return '/'.join(parts)
+        else:  # DAP from local file
+            return '%{name}-%{version}.dap'
 
     def _get_dirs_for_rendering(self):
         files = self.tarhandle.getnames()
