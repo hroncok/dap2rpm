@@ -8,7 +8,7 @@ except:
 
 setup(
     name='dap2rpm',
-    version='0.0.1',
+    version='0.1.0',
     description='Generate RPM specfile for DevAssistant DAP packages',
     long_description=''.join(open('README.rst').readlines()),
     keywords='DevAssistant, DAP, RPM, specfile',
@@ -19,8 +19,9 @@ setup(
     package_data={'dap2rpm': ['spec.template']},
     packages=find_packages(),
     entry_points={'console_scripts': ['dap2rpm=dap2rpm:main']},
+    url='https://github.com/devassistant/dap2rpm',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: POSIX :: Linux',
