@@ -156,20 +156,23 @@ class DAP(object):
     def _get_dirs_for_rendering(self):
         files = self.tarhandle.getnames()
         doc = None
-        assistant_dirs = set()
+        icons = None
+        yaml_dirs = set()
         for f in files:
             if f.startswith(self._nv_opj('doc')):
-                doc = self._opj_n('doc')
-            for i in ['icons', 'snippets']:
-                if f.startswith(self._nv_opj(i)):
-                    assistant_dirs.add(self._opj_n(i))
+                doc = self._opj('doc')
+            #for i in ['icons', 'snippets']:
+            elif f.startswith(self._nv_opj('icons')):
+                icons = self._opj('icons')
+            elif f.startswith(self._nv_opj('snippets')):
+                yaml_dirs.add(self._opj('snippets'))
             for i in ['crt', 'twk', 'prep', 'extra']:
                 if f.startswith(self._nv_opj('assistants', i)):
-                    assistant_dirs.add(self._opj_n('assistants', i))
-        return {'doc': doc, 'assistant_dirs': list(sorted(assistant_dirs))}
+                    yaml_dirs.add(self._opj('assistants', i))
+        return {'doc': doc, 'icons': icons, 'yaml_dirs': list(sorted(yaml_dirs))}
 
     def _nv_opj(self, *paths):
         return os.path.join(self.name_version, *paths)
 
-    def _opj_n(self, *paths):
-        return os.path.join(*(paths + (self.name,)))
+    def _opj(self, *paths):
+        return os.path.join(*paths)

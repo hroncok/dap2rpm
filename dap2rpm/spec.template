@@ -1,4 +1,6 @@
-Name:           {{ name }}
+%global shortname {{ name }}
+
+Name:           dap-%{shortname}
 Version:        {{ version }}
 Release:        1%{?dist}
 Summary:        {{ summary }}
@@ -17,17 +19,20 @@ Requires:       {{ r }}
 {{ description }}
 
 %prep
-%setup -q
+%setup -q -n %{shortname}-%{version}
 
 %install
 %install_assistant
 
 %files
 {% if doc %}
-%doc %{assistant_path}/{{ doc }}
+%doc %{assistant_path}/{{ doc }}/%{shortname}
 {% endif %}
-{% for dir in assistant_dirs %}
-%{assistant_path}/{{ dir }}
+{% if icons %}
+%{assistant_path}/{{ icons }}/%{shortname}
+{% endif %}
+{% for dir in yaml_dirs %}
+%{assistant_path}/{{ dir }}/%{shortname}*
 {% endfor %}
 
 %changelog
