@@ -147,7 +147,7 @@ class DAP(object):
     def _get_macroized_source_url(self):
         if self.url:  # DAP from DAPI
             parts = self.url.split('/')
-            parts[-1] = parts[-1].replace(self.name, '%{name}').\
+            parts[-1] = parts[-1].replace(self.name, '%{shortname}').\
                 replace(self.version, '%{version}')
             return '/'.join(parts)
         else:  # DAP from local file
