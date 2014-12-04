@@ -10,7 +10,7 @@ URL:            {{ url }}
 Source0:        {{ source_url }}
 
 BuildRequires:  devassistant-devel
-Requires:       devassistant
+Requires:       devassistant-ui
 {% for r in requires  %}
 Requires:       {{ r }}
 {% endfor %}
