@@ -120,7 +120,7 @@ class DAP(object):
 
     def _get_changelog_entry(self):
         packager = subprocess.check_output(['rpmdev-packager']).decode('utf-8').strip()
-        ce = '{date} {packager} - {version}-1\nInitial package'.format(
+        ce = '* {date} {packager} - {version}-1\nInitial package'.format(
             date=time.strftime('%a %b %d %Y', time.gmtime()),
             packager=packager,
             version=self.version)
