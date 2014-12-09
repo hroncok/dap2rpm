@@ -21,8 +21,14 @@ Requires:       {{ r }}
 %prep
 %setup -q -n %{shortname}-%{version}
 
+%build
+tar czf %{shortname}-%{version}.dap .
+
 %install
 %install_assistant
+
+%check
+da pkg lint -w %{shortname}-%{version}.dap
 
 %files
 {% if doc %}
@@ -34,6 +40,7 @@ Requires:       {{ r }}
 {% for dir in yaml_dirs %}
 %{assistant_path}/{{ dir }}/%{shortname}*
 {% endfor %}
+%{assistant_path}/meta/%{shortname}.yaml
 
 %changelog
 {{ changelog_entry }}
