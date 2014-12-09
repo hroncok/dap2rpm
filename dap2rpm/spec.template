@@ -22,13 +22,13 @@ Requires:       {{ r }}
 %setup -q -n %{shortname}-%{version}
 
 %build
-tar czf %{shortname}-%{version}.dap .
+%repack_assistant
 
 %install
 %install_assistant
 
 %check
-da pkg lint -w %{shortname}-%{version}.dap
+%check_assistant
 
 %files
 {% if doc %}
