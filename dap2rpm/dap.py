@@ -161,14 +161,18 @@ class DAP(object):
         for f in files:
             if f.startswith(self._nv_opj('doc')):
                 doc = self._opj('doc')
-            #for i in ['icons', 'snippets']:
-            elif f.startswith(self._nv_opj('icons')):
-                icons = self._opj('icons')
             elif f.startswith(self._nv_opj('snippets')):
                 yaml_dirs.add(self._opj('snippets'))
-            for i in ['crt', 'twk', 'prep', 'extra']:
-                if f.startswith(self._nv_opj('assistants', i)):
-                    yaml_dirs.add(self._opj('assistants', i))
+
+            types = ['crt', 'twk', 'prep', 'extra']
+            for t in types:
+                for d in ['assistants', 'icons']:
+                    if f.startswith(self._nv_opj(d, t)):
+                        yaml_dirs.add(self._opj(d, t))
+            for t in types + ['snippets']:
+                if f.startswith(self._nv_opj('files', t)):
+                    yaml_dirs.add(self._opj('files', t))
+
         return {'doc': doc, 'icons': icons, 'yaml_dirs': list(sorted(yaml_dirs))}
 
     def _nv_opj(self, *paths):
