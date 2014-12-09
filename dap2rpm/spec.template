@@ -5,6 +5,8 @@ Version:        {{ version }}
 Release:        1%{?dist}
 Summary:        {{ summary }}
 
+BuildArch:      noarch
+
 License:        {{ license }}
 URL:            {{ url }}
 Source0:        {{ source_url }}
