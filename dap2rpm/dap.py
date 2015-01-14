@@ -149,8 +149,8 @@ class DAP(object):
         info['source_url'] = self._get_macroized_source_url()
         info['requires'] = []
         for r in meta_parsed.get('dependencies', []):
-            if not r.startswith('dap-'):
-                r = 'dap-' + r
+            if not r.startswith('devassistant-dap-'):
+                r = 'devassistant-dap-' + r
             info['requires'].append(r)
         info['requires'] = list(sorted(info['requires']))
         info['description'] = meta_parsed.get('description', '')

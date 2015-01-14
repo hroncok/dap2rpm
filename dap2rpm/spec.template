@@ -1,6 +1,6 @@
 %global shortname {{ name }}
 
-Name:           dap-%{shortname}
+Name:           devassistant-dap-%{shortname}
 Version:        {{ version }}
 Release:        1%{?dist}
 Summary:        {{ summary }}
