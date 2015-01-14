@@ -108,11 +108,23 @@ class DAP(object):
         info['changelog_entry'] = self._get_changelog_entry()
         return info
 
-    def render(self):
+    def _render(self, template_name, extra_vars=None):
         jinja_env = jinja2.Environment(loader=jinja2.PackageLoader('dap2rpm', '.'),
             trim_blocks=True, lstrip_blocks=True)
-        template = jinja_env.get_template('spec.template')
-        return template.render(**self.extract_info())
+        template = jinja_env.get_template(template_name)
+        template_vars = self.extract_info()
+        if extra_vars:
+            template_vars.update(extra_vars)
+        return template.render(**template_vars)
+
+    def render_spec(self, include_files=False):
+        files_section = '%files -f dap-files'
+        if include_files:
+            files_section = '%files\n' + self._render('files.template')
+        return self._render('spec.template', {'files_section': files_section})
+
+    def render_files(self):
+        return self._render('files.template')
 
     def _get_name_and_version(self):
         name_version = os.path.splitext(os.path.basename(self.path))[0]
