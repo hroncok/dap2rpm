@@ -8,7 +8,7 @@ except:
 
 setup(
     name='dap2rpm',
-    version='0.1.3',
+    version='0.1.4',
     description='Generate RPM specfile for DevAssistant DAP packages',
     long_description=''.join(open('README.rst').readlines()),
     keywords='DevAssistant, DAP, RPM, specfile',
