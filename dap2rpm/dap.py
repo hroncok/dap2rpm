@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import tarfile
+import tempfile
 import time
 
 import jinja2
@@ -20,13 +21,13 @@ class DAP(object):
         self.tarhandle = tarfile.open(self.path, mode='r:*')
 
     @classmethod
-    def get_dap(cls, dapname, version=None, saveto='~/rpmbuild/SOURCES'):
+    def get_dap(cls, dapname, version=None, saveto=None):
         """Gets DAP from DAPI or local file and saves it to self.saveto
 
         Args:
             dapname: name of DAP on DAPI or full path to DAP file
             version: version of DAP, used only if DAP is got from DAPI
-            saveto: where to save downloaded DAP
+            saveto: where to save downloaded DAP, random temp dir by default
 
         Returns:
             DAP object
@@ -34,12 +35,24 @@ class DAP(object):
         Raises:
             exceptions.DAPGetException if getting the DAP fails
         """
-        saveto = os.path.abspath(os.path.expanduser(saveto))
-
-        if dapname.endswith('.dap'):
-            return cls._get_dap_local(dapname, saveto)
+        to_delete = None
+        if not saveto: # Using temporary directory
+            saveto = tempfile.mkdtemp()
+            to_delete = saveto
         else:
-            return cls._get_dap_from_dapi(dapname, version, saveto)
+            saveto = os.path.abspath(os.path.expanduser(saveto))
+
+        try:
+            if dapname.endswith('.dap'):
+                return cls._get_dap_local(dapname, saveto)
+            else:
+                return cls._get_dap_from_dapi(dapname, version, saveto)
+        finally: # Deleting temporary directory
+            if to_delete and os.path.isdir(to_delete):
+                try:
+                    shutil.rmtree(to_delete)
+                except:
+                    pass
 
     @classmethod
     def _get_dap_from_dapi(cls, dapname, version, saveto):
