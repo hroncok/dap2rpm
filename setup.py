@@ -16,7 +16,7 @@ setup(
     author_email='bkabrda@redhat.com',
     license='GPLv2',
     install_requires=open('requirements.txt').read().splitlines(),
-    package_data={'dap2rpm': ['spec.template']},
+    package_data={'dap2rpm': ['files.template', 'spec.template']},
     packages=find_packages(),
     entry_points={'console_scripts': ['dap2rpm=dap2rpm:main']},
     url='https://github.com/devassistant/dap2rpm',
