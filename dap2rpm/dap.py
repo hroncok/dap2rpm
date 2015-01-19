@@ -144,7 +144,13 @@ class DAP(object):
         return [name_version] + name_version.rsplit('-', 1)
 
     def _get_changelog_entry(self):
-        packager = subprocess.check_output(['rpmdev-packager']).decode('utf-8').strip()
+        try:
+            packager = subprocess.check_output(['rpmdev-packager']).decode('utf-8').strip()
+        except subprocess.CalledProcessError as e:
+            # Workaround for https://fedorahosted.org/rpmdevtools/ticket/29
+            import getpass
+            packager = getpass.getuser()
+
         ce = '* {date} {packager} - {version}-1\nInitial package'.format(
             date=time.strftime('%a %b %d %Y', time.gmtime()),
             packager=packager,
