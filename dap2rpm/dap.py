@@ -14,14 +14,15 @@ from dap2rpm import exceptions
 class DAP(object):
     dapi_api_url = 'https://dapi.devassistant.org/api/'
 
-    def __init__(self, path, url=''):
+    def __init__(self, path, url='', licensefile=None):
         self.path = path
         self.url = url
+        self.licensefile = licensefile
         self.name_version, self.name, self.version = self._get_name_and_version()
         self.tarhandle = tarfile.open(self.path, mode='r:*')
 
     @classmethod
-    def get_dap(cls, dapname, version=None, saveto=None):
+    def get_dap(cls, dapname, version=None, saveto=None, licensefile=None):
         """Gets DAP from DAPI or local file and saves it to self.saveto
 
         Args:
@@ -44,9 +45,9 @@ class DAP(object):
 
         try:
             if dapname.endswith('.dap'):
-                return cls._get_dap_local(dapname, saveto)
+                return cls._get_dap_local(dapname, saveto, licensefile)
             else:
-                return cls._get_dap_from_dapi(dapname, version, saveto)
+                return cls._get_dap_from_dapi(dapname, version, saveto, licensefile)
         finally: # Deleting temporary directory
             if to_delete and os.path.isdir(to_delete):
                 try:
@@ -55,7 +56,7 @@ class DAP(object):
                     pass
 
     @classmethod
-    def _get_dap_from_dapi(cls, dapname, version, saveto):
+    def _get_dap_from_dapi(cls, dapname, version, saveto, licensefile):
         """Gets DAP from DAPI and saves it to self.saveto.
 
         Args:
@@ -90,10 +91,10 @@ class DAP(object):
                 if chunk:  # filter out keep-alive new chunks
                     f.write(chunk)
                     f.flush()
-        return cls(resname, url=download_url)
+        return cls(resname, url=download_url, licensefile=licensefile)
 
     @classmethod
-    def _get_dap_local(cls, dapname, saveto):
+    def _get_dap_local(cls, dapname, saveto, licensefile):
         """Copies dap from a local filesystem to self.saveto.
         Ignores self.version.
 
@@ -112,7 +113,7 @@ class DAP(object):
             shutil.copy2(dapname, resname)
         except IOError as e:
             raise exceptions.DAPGetException('Can\'t get local DAP: {0}'.format(e))
-        return cls(resname)
+        return cls(resname, licensefile=licensefile)
 
     def extract_info(self):
         info = {'name': self.name, 'version': self.version}
@@ -204,7 +205,14 @@ class DAP(object):
                 if f.startswith(self._nv_opj('files', t)):
                     yaml_dirs.add(self._opj('files', t))
 
-        return {'doc': doc, 'icons': icons, 'yaml_dirs': list(sorted(yaml_dirs))}
+        yaml_dirs = list(sorted(yaml_dirs))
+
+        if self.licensefile and self._nv_opj('doc', self.name, self.licensefile) in files:
+            licensefile = self._opj('doc', '%{shortname}', self.licensefile)
+        else:
+            licensefile = None
+
+        return {'doc': doc, 'icons': icons, 'yaml_dirs': yaml_dirs, 'licensefile': licensefile}
 
     def _nv_opj(self, *paths):
         return os.path.join(self.name_version, *paths)

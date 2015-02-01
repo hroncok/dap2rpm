@@ -1,3 +1,6 @@
+{% if licensefile %}
+%license %{assistant_path}/{{ licensefile }}
+{% endif %}
 {% if doc %}
 %doc %{assistant_path}/{{ doc }}/%{shortname}
 {% endif %}
